@@ -3,6 +3,22 @@ import {icon} from './lab/icons.mjs';
 const $ = id => document.getElementById(id);
 for (const el of document.querySelectorAll('[data-icon]')) el.innerHTML = icon(el.dataset.icon);
 
+const colorPreference = matchMedia('(prefers-color-scheme: dark)');
+const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : colorPreference.matches;
+function syncThemeControl() {
+  $('theme-toggle').textContent = isDark() ? '浅色' : '深色';
+  $('theme-toggle').setAttribute('aria-label', `切换为${isDark() ? '浅色' : '深色'}主题`);
+}
+$('theme-toggle').hidden = false;
+$('theme-toggle').addEventListener('click', () => {
+  const theme = isDark() ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem('pw-theme', theme); } catch {}
+  syncThemeControl();
+});
+colorPreference.addEventListener('change', syncThemeControl);
+syncThemeControl();
+
 // This viewer reads saved author replays; it never creates or changes a live lab instance.
 let replays;
 let selected = 'joint_reference';
@@ -34,7 +50,7 @@ function render() {
     bar.className = `thermal-bar ${e.action === 'incubate' ? 'bca' : 'ngs'}${e.sample === 'A' && start > 20 ? ' late' : ''}${minute < e.t ? ' future' : ''}`;
     bar.style.cssText = `left:${e.t / 80 * 100}%;width:${(e.end - e.t) / 80 * 100}%;top:${row * 38 + 6}px`;
     const label = e.action === 'incubate' ? 'BCA' : `NGS ${e.sample}`;
-    bar.title = `${label} · ${names[e.action]}：${e.t}–${e.end} min`;
+    bar.title = `${label} · ${names[e.action]}：${e.t}-${e.end} min`;
     const text = document.createElement('span');
     text.textContent = label;
     bar.append(text);
@@ -48,8 +64,8 @@ function render() {
 
   $('replay-clock').value = `${minute} min`;
   const active = schedule.find(e => minute >= e.t && minute < e.end);
-  const device = active ? `温控仪正在执行${active.action === 'incubate' ? ' BCA 配板与显色' : ` NGS ${active.sample} 连接`}。` : '温控仪空闲。';
-  const window = minute >= start ? `A 已于第 ${start} 分钟开始连接。` : minute <= 20 ? `A 的连接开始窗口还剩 ${20 - minute} 分钟。` : 'A 尚未开始连接，已经错过第 20 分钟的窗口。';
+  const device = active ? `温控仪：${active.action === 'incubate' ? 'BCA 显色' : `NGS ${active.sample} 连接`}。` : '温控仪空闲。';
+  const window = minute >= start ? `A 于第 ${start} 分钟开始连接。` : minute <= 20 ? `A 的连接窗口还剩 ${20 - minute} 分钟。` : 'A 已错过连接窗口。';
   $('time-note').textContent = `${device}${window}`;
 
   document.querySelector('.replay-verdict').classList.toggle('failed', !result.reward);
@@ -57,7 +73,7 @@ function render() {
   $('duration').textContent = `${result.t} min`;
   $('start-time').textContent = `${start} / 20 min`;
   $('check-count').textContent = `${passed} / ${result.checks.length}`;
-  $('verdict-note').textContent = failed.length ? '显色先占用温控仪至第 42 分钟，A 的连接开始晚于窗口 22 分钟。其他 11 项条件通过。' : '先完成两份样本的连接，再安排显色。所有交付条件满足，剩余 7 分钟。';
+  $('verdict-note').textContent = failed.length ? `A 晚于窗口 ${start - 20} 分钟，其余 ${passed} 项通过。` : `${passed} 项条件全部满足。`;
 }
 
 for (const button of document.querySelectorAll('[data-strategy]')) {
@@ -76,8 +92,16 @@ try {
   for (const button of document.querySelectorAll('[data-strategy]')) button.disabled = false;
   $('replay-time').disabled = false;
 } catch (error) {
+  $('comparison-card').classList.add('unavailable');
+  document.querySelector('.strategy-switch').classList.add('unavailable');
+  $('timeline').setAttribute('aria-label', '排程回放未加载，暂不可用。');
   $('replay-error').hidden = false;
-  $('replay-error').textContent = `${error.message}。请通过 HTTP 静态服务器打开本页；仍可进入实验台。`;
-  $('time-note').textContent = '没有可显示的回放数据。';
+  $('replay-error').textContent = `${error.message}，请刷新重试。`;
+  $('thermal-bars').replaceChildren();
+  for (const id of ['verdict', 'duration', 'start-time', 'check-count']) $(id).textContent = '未加载';
+  $('time-note').textContent = '回放暂不可用。';
   $('verdict-note').textContent = '回放未加载，不作结果判断。';
+} finally {
+  for (const el of document.querySelectorAll('.skeleton')) el.classList.remove('skeleton');
+  $('comparison-card').setAttribute('aria-busy', 'false');
 }

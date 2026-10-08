@@ -19,6 +19,9 @@ uv run --no-project python -m http.server 8782 --bind 127.0.0.1
 - `lab/replays.json`：8 份已保存的作者开发回放；不是模型 rollout。
 - `lab/catalog.json`：265 条公开协议元数据，其中 24 条含静态代码节点索引。316 个接口目录 ID 尚未完全对齐。
 - `lab/icons/LICENSE`：Lucide / Feather 图标许可。
+- `assets/`：首屏概念配图、实验台实际截图，以及本地 Geist 字体和 OFL 许可。
+
+首页按“简介、排程对照、实验入口、来源说明”组织；详细口径默认折叠，保留演示与模型成绩的区别。浅色／深色默认跟随系统，也可在导航栏切换；选择仅保存在当前浏览器。手机采用单列布局，减少动效设置会关闭过渡动画。
 
 首页时间轴读取两份已有联合实验回放。温控仪占用由 `ligate` 事件加 15 分钟、`incubate` 事件加 32 分钟重建，与当前演示契约一致。滑块只查看记录，不改变实时实验。两组均在 78 分钟提交；显色优先对照中 A 于第 42 分钟开始连接，超过 20 分钟窗口。
 
@@ -45,3 +48,5 @@ uv run --no-project python -m http.server 8782 --bind 127.0.0.1
 - [Transformer Explainer](https://poloclub.github.io/transformer-explainer/)：把参数、中间过程、结果放在同一交互中。
 
 工作台沿用本项目现有实现，图标来自 [Lucide](https://lucide.dev/license)，许可随静态文件保留。
+
+字体使用 [Geist](https://github.com/vercel/geist-font)，本地分发并保留 `assets/fonts/OFL.txt`。首屏概念配图由 image_gen 生成，提示为“冷灰实验台上的透明微孔板、移液头、两只微量离心管与金属温控模块；少量 #5955cc 紫色液体，柔和侧光，高质量产品摄影，无文字、标签或 UI”。该图不表示实际设施或实验结果。`assets/workbench.jpg` 是本项目未开始实验时的工作台截图。
