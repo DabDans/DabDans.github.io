@@ -1,0 +1,55 @@
+:root{--ink:#202535;--muted:#727887;--line:#e6e8ef;--canvas:#f7f8fb;--accent:#6458d7;--accent-soft:#efedfd;--teal:#238676;--red:#bb494b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft Yahei",sans-serif}
+h1,h2,h3,p{margin:0}
+h1{font-size:30px;font-weight:650;letter-spacing:-.7px;line-height:1.4}
+h2{font-size:16px;font-weight:650}
+h3{font-size:15px;font-weight:600}
+p{color:var(--muted)}
+a{color:var(--accent);text-underline-offset:3px}
+button,input,select{font:inherit;font-size:14px;min-height:40px;border:1px solid #dcdfe8;border-radius:7px;background:#fff;color:var(--ink);padding:8px 12px}
+button{font-weight:550;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:8px;transition:background .15s,border-color .15s}
+button:hover{background:#f3f2fc;border-color:#b6b0e9}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 4px #6458d725}
+button.primary:hover{background:#5448c3}
+button.danger{color:var(--red);background:#fff7f6;border-color:#edcdca}
+button.small{font-size:13px;min-height:32px;padding:4px 9px}
+button.text-button{color:var(--accent);border:0;background:none;min-height:28px;padding:0;font-size:13px}
+button.icon-button{padding:7px;min-height:32px}
+.icon{width:19px;height:19px;flex-shrink:0;vertical-align:middle}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a39af0;outline-offset:3px}
+input{min-width:0}
+input::placeholder{color:#959baa}
+summary{cursor:pointer}
+table{border-collapse:collapse;width:100%}
+td,th{text-align:left;padding:7px;border-bottom:1px solid var(--line)}
+[hidden]{display:none!important}
+.skip-link{position:fixed;z-index:30;left:250px;top:-80px;background:#fff;padding:12px}
+.skip-link:focus{top:12px}
+.badge,.demo-label,.status-badge,.count-badge{display:inline-flex;align-items:center;font-size:12px;font-weight:550;line-height:1.5;border-radius:5px;padding:4px 8px;white-space:nowrap}
+.badge{background:#f0f1f6;color:#7a7f8c}
+.status-badge{background:#efeff5;color:#747888;padding:6px 10px}
+.status-badge.running{background:#e5f4ef;color:#207360}
+.status-badge.finished{background:var(--accent-soft);color:var(--accent)}
+.count-badge{min-width:24px;justify-content:center;background:#f0effa;color:var(--accent)}
+.eyebrow,.section-kicker{font-size:12px;letter-spacing:1.3px;color:#898b9d;font-weight:550}
+.quiet-label{color:var(--muted);font-size:12px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}
+.section-heading span{font-size:12px;color:var(--muted)}
+.panel{min-width:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 2px 4px #1b244004}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.panel-heading .section-kicker{display:block;margin-bottom:3px}
+.pass{color:var(--teal)}
+.fail{color:var(--red)}
+.error{border:1px solid #f1ccc7;background:#fff3f1;color:#a24c41;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;min-height:145px;padding:20px 12px;color:var(--muted);font-size:13px}
+.empty .icon{width:26px;height:26px;color:#acafc1}
+.empty strong{font-size:14px;font-weight:550;color:#71778b}
+.empty small{max-width:230px;line-height:1.7}
+.checks{list-style:none;padding:0;margin:12px 0}
+.checks li{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.checks small{display:block;color:var(--muted);font-size:12px}
+.bar{height:4px;background:#eeedf6;border-radius:4px;margin:9px 0;overflow:hidden}
+.bar i{display:block;height:100%;background:#aaa3e6}
+.bar i.bad{background:var(--red)}
