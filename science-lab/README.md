@@ -17,7 +17,6 @@ uv run --no-project python -m http.server 8782 --bind 127.0.0.1
 - `index.html`、`project.css`、`project.mjs`：项目首页、排程对照、场景入口和环境机制。
 - `lab/`：实验工作台的静态白名单副本。实验引擎与规则沿用现有版本，品牌入口返回项目首页。
 - `lab/replays.json`：8 份已保存的作者开发回放；不是模型 rollout。
-- `lab/catalog.json`：265 条公开协议元数据，其中 24 条含静态代码节点索引。316 个接口目录 ID 尚未完全对齐。
 - `lab/icons/LICENSE`：Lucide / Feather 图标许可。
 - `assets/`：首屏概念配图、实验台实际截图，以及本地 Geist 字体和 OFL 许可。
 
@@ -29,7 +28,7 @@ uv run --no-project python -m http.server 8782 --bind 127.0.0.1
 
 ## 实验台页面与连续状态
 
-实验选择入口为 `lab/#experiments`。每个实验可独立切换操作台、设备与排程、检测报告、行动记录、交付结果、操作规程和参考回放，例如 `lab/#joint/operate`、`lab/#joint/schedule`。旧的 `#joint`、`#ngs` 等入口仍直接进入操作台。
+实验选择入口为 `lab/#experiments`。公开演示已移除协议目录，旧 `#catalog` 地址转回实验选择。每个实验可独立切换操作台、设备与排程、检测报告、行动记录、交付结果、操作规程和参考回放，例如 `lab/#joint/operate`、`lab/#joint/schedule`。旧的 `#joint`、`#ngs` 等入口仍直接进入操作台。
 
 操作台只展开当前工作流和选中操作的参数，右侧显示操作次数、预算、待到达反馈与设备状态。切换页面、工作流或实验会保留参数选择；实验引擎实例不因路由切换而重建。结果与历史按实验分别展示。
 
@@ -49,7 +48,7 @@ uv run --no-project python -m http.server 8782 --bind 127.0.0.1
 
 ## 数据来源与边界
 
-来源入口：[Opentrons Protocol Library](https://library.opentrons.com/)。各实验所引用的原始规程及作者补充假设，见实验台“操作规程”和“参考回放”。这里只提供公开元数据、来源链接和代码节点位置，不转载完整第三方协议脚本。
+来源入口：[Opentrons Protocol Library](https://library.opentrons.com/)。各实验所引用的原始规程及作者补充假设，见实验台“操作规程”和“参考回放”。这里只展示四个交互实验和其来源链接，不转载完整第三方协议脚本。
 
 演示的时间、资源、材料和评分规则在作者侧可查看，不用于正式隔离 Solver 测试。模拟失败表示未满足本演示契约，不能推断实际生物产率或模型能力。正式评测需要独立可信后端、隐藏评分和公开文件白名单。GitHub Pages 仅承载静态演示，不承载研究侧 stdio MCP 服务；可用浏览器的 WebMCP 能力是可选接口。
 

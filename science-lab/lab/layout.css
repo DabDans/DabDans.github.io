@@ -133,10 +133,10 @@ h3 { font-size: 15px; }
 .sidebar-bottom .icon { width: 20px; height: 20px; margin-top: 2px; }
 .main-shell { grid-column: 2; grid-row: 2; min-width: 0; }
 main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; min-width: 0; }
-.app-shell[data-page='experiments'], .app-shell[data-page='catalog'] { grid-template-columns: minmax(0, 1fr); }
-.app-shell[data-page='experiments'] .sidebar, .app-shell[data-page='catalog'] .sidebar { display: none; }
-.app-shell[data-page='experiments'] .main-shell, .app-shell[data-page='catalog'] .main-shell { grid-column: 1; }
-.app-shell[data-page='experiments'] main, .app-shell[data-page='catalog'] main { max-width: 1240px; padding-top: 48px; }
+.app-shell[data-page='experiments'] { grid-template-columns: minmax(0, 1fr); }
+.app-shell[data-page='experiments'] .sidebar { display: none; }
+.app-shell[data-page='experiments'] .main-shell { grid-column: 1; }
+.app-shell[data-page='experiments'] main { max-width: 1240px; padding-top: 48px; }
 .mobile-menu { display: none; }
 
 /* Choosing an experiment is a separate, spacious landing page. */
@@ -335,7 +335,6 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
 .page-heading { margin: 28px 0 23px; }
 .page-heading h2 { font-size: 22px; font-weight: 600; }
 .page-heading p { margin-top: 7px; color: #858a9c; font-size: 14px; }
-#catalog-view .page-heading { margin-top: 0; }
 #view-schedule > .panel + .panel { margin-top: 21px; }
 .equipment-panel #resources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
 .resource { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eeedf5; font-size: 13px; }
@@ -406,25 +405,6 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
 .replay summary { color: #8b80a9; }
 .replay ol { padding-left: 23px; }
 .replay li { margin: 9px 0; }
-.catalog-tools { display: flex; align-items: center; gap: 16px; margin: 27px 0 22px; }
-.search-field { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; padding: 0 13px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
-.search-field .icon { color: #a5a8b7; }
-.search-field input { width: 100%; min-width: 0; min-height: 44px; padding-left: 0; border: 0; background: transparent; }
-.search-field:focus-within { outline: 3px solid #a39af0; outline-offset: 3px; }
-.search-field input:focus-visible { outline: none; }
-.filter-field { display: flex; align-items: center; gap: 10px; color: #8e93a5; font-size: 12px; }
-.filter-field select { min-height: 44px; max-width: 220px; font-size: 13px; }
-#catalog-count { color: #9197a8; font-size: 12px; white-space: nowrap; }
-.catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 19px; }
-.catalog-card { min-width: 0; padding: 23px; border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow-wrap: anywhere; }
-.catalog-card h2 { color: #687087; font-size: 15px; font-weight: 550; line-height: 1.65; }
-.catalog-card p { margin: 17px 0; color: #959aab; font-size: 13px; line-height: 1.8; }
-.catalog-card a { font-size: 13px; }
-.catalog-card details { margin-top: 18px; color: #9c9caf; font-size: 12px; }
-.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 13px; }
-.tags span { padding: 2px 6px; border-radius: 4px; background: #f4f4f9; color: #9699ad; font-size: 11px; }
-.catalog-empty { grid-column: 1 / -1; border: 1px dashed var(--line); border-radius: 10px; background: #fff; }
-
 /* The inspector drops below before the operation form becomes cramped. */
 @media (min-width: 1600px) {
   main { padding-right: 40px; padding-left: 40px; }
@@ -446,7 +426,6 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
   .run-actions button { padding-right: 10px; padding-left: 10px; }
   .topbar-meta { gap: 10px; }
   .sample-selector { align-items: flex-start; flex-direction: column; gap: 6px; }
-  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 1080px) {
   .topbar-meta #active-count { display: none; }
@@ -463,9 +442,6 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
   .experiment-card { padding: 22px; }
   .experiment-copy h2 { font-size: 18px; }
   .records-grid { grid-template-columns: minmax(0, 1fr); }
-  .catalog-tools { flex-wrap: wrap; }
-  .search-field { flex-basis: 100%; }
-  #catalog-count { margin-left: auto; }
 }
 @media (max-width: 800px) {
   .topbar { gap: 24px; }
@@ -497,7 +473,7 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
   .sidebar.open { display: flex; }
   .mobile-menu { display: inline-flex; min-height: 34px; padding: 5px; border: 0; background: #eeebfb; color: #8b7fc4; }
   main { padding: 19px 16px 32px; }
-  .app-shell[data-page='experiments'] main, .app-shell[data-page='catalog'] main { padding: 30px 18px 36px; }
+  .app-shell[data-page='experiments'] main { padding: 30px 18px 36px; }
   .breadcrumb { gap: 8px; margin-bottom: 18px; font-size: 11px; }
   .breadcrumb strong { max-width: 112px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .heading { gap: 12px; margin-bottom: 11px; }
@@ -591,12 +567,6 @@ main { width: 100%; max-width: 1440px; margin: 0 auto; padding: 27px 30px 48px; 
   .experiment-card.featured .experiment-card-end { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; padding-top: 13px; border-top: 1px solid #dfd8f1; }
   .journey-guide { grid-template-columns: minmax(0, 1fr); gap: 23px; margin-top: 29px; padding-top: 26px; }
   .journey-guide > div { gap: 2px 13px; }
-  .catalog-tools { gap: 13px; }
-  .filter-field { gap: 9px; }
-  .filter-field select { max-width: 187px; min-height: 40px; font-size: 12px; }
-  #catalog-count { font-size: 11px; }
-  .catalog-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
-  .catalog-card { padding: 21px; }
 }
 @media (max-width: 380px) {
   .topbar { gap: 10px; padding-right: 12px; padding-left: 12px; }

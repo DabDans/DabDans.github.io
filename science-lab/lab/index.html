@@ -7,16 +7,16 @@
   <meta name="description" content="选择科学实验，在持续计时的环境中操作、等待反馈并查看结果。">
   <link rel="icon" type="image/svg+xml" href="../mark.svg">
   <link rel="preload" href="../assets/fonts/geist-variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=pages-8">
-  <link rel="stylesheet" href="layout.css?v=pages-8">
-  <script type="module" src="app.mjs?v=pages-8"></script>
+  <link rel="stylesheet" href="style.css?v=pages-9">
+  <link rel="stylesheet" href="layout.css?v=pages-9">
+  <script type="module" src="app.mjs?v=pages-9"></script>
 </head>
 <body>
 <a href="#main" class="skip-link">跳到工作区</a>
 <div class="app-shell" data-page="experiments">
   <header class="topbar">
     <a class="brand" href="../" aria-label="返回 Protocol Worlds 项目首页"><img src="../mark.svg" alt="" width="32" height="32"><span>Protocol Worlds</span></a>
-    <nav class="global-nav" aria-label="工作台导航"><a href="#experiments" data-global="experiments">实验选择</a><a href="#catalog" data-global="catalog">协议目录</a></nav>
+    <nav class="global-nav" aria-label="工作台导航"><a href="#experiments" data-global="experiments">实验选择</a></nav>
     <div class="topbar-meta"><span id="active-count">没有运行中的实验</span><span class="demo-label">模拟实验台</span></div>
   </header>
   <aside class="sidebar" id="sidebar">
@@ -84,10 +84,6 @@
           <div class="page-heading"><h2>参考回放</h2><p>查看已保存的作者策略；不会改变当前实验。</p></div>
           <section class="panel replay"><label for="replay-select">选择回放</label><select id="replay-select"></select><div id="replay-output"></div></section>
         </section>
-      </section>
-      <section id="catalog-view" hidden>
-        <div class="page-heading"><span class="page-label">来源索引</span><h1>协议目录</h1><p>搜索公开协议与已提取的代码节点。</p></div>
-        <div class="catalog-tools"><label class="search-field"><span data-icon="search"></span><input id="search" aria-label="搜索协议" placeholder="搜索名称、NGS、RNA、BCA…"></label><label class="filter-field"><span>索引范围</span><select id="filter"><option value="all">全部公开记录</option><option value="detail">已索引详细代码</option><option value="delay">有等待 / 人工交接节点</option><option value="verified">带来源验证标记</option></select></label><span id="catalog-count"></span></div><div id="catalog" class="catalog-grid"></div>
       </section>
     </main>
   </div>

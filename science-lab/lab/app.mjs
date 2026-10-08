@@ -5,9 +5,9 @@ const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,
 const devices={robot:'液体处理机器人',qc:'检测站',thermal:'温控仪',magnet:'磁分离位',reader:'读板仪'};
 const stages={holding:'等待检测 / 配液',mixing:'配液中',mixed:'反应液就绪',ligating:'连接中',done:'已完成',raw:'尚未处理',binding:'结合孵育',bound:'结合完成',separating:'磁分离中',separated:'分离完成',washing:'可洗涤',wash_wait:'洗涤等待',drying:'干燥中',eluting:'洗脱分离',eluate_ready:'可以回收',recovering:'回收中',incubating:'显色孵育',developed:'可以读板',reading:'读板中',measured:'可以推算浓度',normalizing:'配制交付中'};
 const actions={start:'开始实验',thaw:'酶置于冰上',assay:'输入量检测',mix:'配制连接液',ligate:'开始连接',bind:'磁珠结合',magnet:'磁分离',discard:'弃上清',wash:'洗涤',dry:'开始干燥',elute:'洗脱',recover:'回收产物',scout:'蛋白浓度预估',incubate:'开始显色',read:'读板',normalize:'按推算浓度配制',submit:'提交',feedback:'反馈到达',window_missed:'连接窗口失去',dry_window_missed:'干燥窗口失去'};
-let current=null,worlds={},catalog=[],replays={},history=[],actionFlow='ngs';
+let current=null,worlds={},replays={},history=[],actionFlow='ngs';
 const uiState=Object.fromEntries(Object.keys(SPECS).map(k=>[k,{flow:k==='joint'?'ngs':k,operations:{ngs:'thaw',beads:'bind',bca:'scout'},fields:{},view:'operate',rate:'0.5'}]));
-const scenarioIcons={ngs:'dna',beads:'magnet',bca:'flask-conical',joint:'workflow',catalog:'database'};
+const scenarioIcons={ngs:'dna',beads:'magnet',bca:'flask-conical',joint:'workflow'};
 try{history=JSON.parse(localStorage.getItem('protocol-world-history')||'[]');const active=sessionStorage.getItem('protocol-world-active');if(active){for(const kind of active.split(',').map(x=>x.trim()).filter(x=>SPECS[x]))history.push({kind,interrupted:true,date:new Date().toLocaleString('zh-CN')});localStorage.setItem('protocol-world-history',JSON.stringify(history));sessionStorage.removeItem('protocol-world-active');$('error').hidden=false;$('error').textContent='页面曾在实验中重新加载：旧实验已登记为中断，不能作为完成记录。';}}catch{}
 for(const k of Object.keys(SPECS))worlds[k]=new Lab(k);
 for(const el of document.querySelectorAll('[data-icon]'))el.innerHTML=icon(el.dataset.icon);
@@ -30,19 +30,20 @@ function navigate(kind,view='operate'){
 function readRoute(){
   const [kind,view]=location.hash.slice(1).split('/');
   if(kind==='main'&&current)return;
-  select(SPECS[kind]||['catalog','experiments'].includes(kind)?kind:'experiments',view||'operate');
+  if(kind==='catalog'){window.history.replaceState(null,'','#experiments');select('experiments');return;}
+  select(SPECS[kind]||kind==='experiments'?kind:'experiments',view||'operate');
 }
 function select(kind,view='operate'){
-  if(!SPECS[kind]&&!['catalog','experiments'].includes(kind))throw Error('未知实验');
+  if(!SPECS[kind]&&kind!=='experiments')throw Error('未知实验');
   const changed=kind!==current;
   const pageChanged=changed||view!==currentView;
   if(changed)saveFields();
   current=kind;closeMenu();
   if(pageChanged)window.scrollTo({top:0,behavior:'instant'});
   document.querySelector('.app-shell').dataset.page=SPECS[kind]?'lab':kind;
-  $('lab-view').hidden=!SPECS[kind];$('catalog-view').hidden=kind!=='catalog';$('experiment-view').hidden=kind!=='experiments';
+  $('lab-view').hidden=!SPECS[kind];$('experiment-view').hidden=kind!=='experiments';
   for(const link of document.querySelectorAll('[data-global]')){const active=link.dataset.global===kind;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');}
-  if(!SPECS[kind]){document.title=`Protocol Worlds · ${kind==='catalog'?'协议目录':'实验选择'}`;if(kind==='catalog')renderCatalog();else renderExperiments();render();return;}
+  if(!SPECS[kind]){document.title='Protocol Worlds · 实验选择';renderExperiments();render();return;}
   const spec=SPECS[kind];currentView=views.some(x=>x[0]===view)?view:'operate';uiState[kind].view=currentView;
   $('scenario-switch').value=kind;$('breadcrumb-name').textContent=spec.name;$('page-name').textContent=views.find(x=>x[0]===currentView)[1];
   $('title').textContent=spec.name;$('subtitle').textContent=spec.subtitle;$('goal').textContent=spec.target;
@@ -161,19 +162,18 @@ const replayNames={ngs_reference:'NGS / 可完成参考 · 42 min',beads_referen
 function renderReplayChoices(){if(!SPECS[current])return;const keys=current==='ngs'?['ngs_reference','idle_before_commit','idle_after_commit']:current==='beads'?['beads_reference','beads_premature_discard']:current==='bca'?['bca_reference']:['joint_reference','joint_bca_first'];$('replay-select').innerHTML=keys.map(k=>`<option value="${k}">${replayNames[k]}</option>`).join('');renderReplay();}
 function renderReplay(){const r=replays[$('replay-select').value];if(!r){$('replay-output').innerHTML='<p>加载回放证据…</p>';return;}$('replay-output').innerHTML=`<div class="replay-stats"><strong class="${r.result.reward?'pass':'fail'}">${r.result.reward?'PASS':'FAIL'}</strong><span>终点 ${r.result.t} min</span></div><ul class="checks">${r.result.checks.filter(x=>!x.pass).map(x=>`<li class="fail">${esc(x.name)}：${esc(x.detail)}</li>`).join('')}</ul><details><summary>查看逐步开发轨迹</summary><ol>${r.events.map(e=>`<li>${e.t.toFixed(1)} min · ${esc(actions[e.action]||e.action)} ${esc(e.sample||'')} ${esc(e.message||'')}</li>`).join('')}</ol></details>`;}
 $('replay-select').addEventListener('change',renderReplay);
-function renderCatalog(){const q=$('search').value.toLowerCase(),f=$('filter').value;const rows=catalog.filter(r=>`${r.name} ${r.slug} ${r.robot?.name||''}`.toLowerCase().includes(q)&&(f==='all'||f==='detail'&&r.detail||f==='delay'&&r.detail?.nodes.some(n=>['delay','pause'].includes(n.operation))||f==='verified'&&Object.values(r.verification||{}).some(Boolean)));$('catalog-count').textContent=`${rows.length} 条匹配`;$('catalog').innerHTML=rows.map(r=>`<article class="catalog-card"><h2>${esc(r.name)}</h2><div class="tags"><span>${esc(r.robot?.name||'机器人未注明')}</span>${Object.entries(r.verification||{}).filter(([,v])=>v).map(([k])=>`<span>${esc(k)} 来源标记</span>`).join('')}${r.detail?'<span>已索引代码节点</span>':''}</div><p>${r.detail?`等待 / 人工交接 ${r.detail.nodes.filter(n=>['delay','pause'].includes(n.operation)).length} 处；温控 / 模块 / 参数 ${r.detail.nodes.filter(n=>!['delay','pause'].includes(n.operation)).length} 处。`:'目录种子：尚未提取代码节点或审查机制。'}</p><a href="${esc(r.source_url)}" target="_blank" rel="noreferrer">打开来源协议 ↗</a>${r.detail?`<details><summary>查看代码节点位置</summary>${r.detail.nodes.map(n=>`L${n.line} · ${esc(n.operation)}`).join('<br>')||'未发现登记节点'}</details>`:''}</article>`).join('')||'<div class="empty catalog-empty"><strong>没有匹配的协议</strong><small>尝试其他关键词，或放宽索引范围。</small></div>';}
-$('search').addEventListener('input',renderCatalog);$('filter').addEventListener('change',renderCatalog);window.addEventListener('hashchange',()=>handle(readRoute));
-function state(){if(!SPECS[current])return {view:current,catalog_count:catalog.length};const s=world().snapshot();for(const k of Object.keys(s.busy))if(!Number.isFinite(s.busy[k]))s.busy[k]='occupied_until_release';if(s.bca&&!s.ended)delete s.bca.normalized;return s;}
+window.addEventListener('hashchange',()=>handle(readRoute));
+function state(){if(!SPECS[current])return {view:current};const s=world().snapshot();for(const k of Object.keys(s.busy))if(!Number.isFinite(s.busy[k]))s.busy[k]='occupied_until_release';if(s.bca&&!s.ended)delete s.bca.normalized;return s;}
 // WebMCP is an optional second interface to the same visible state and actions.
 const context=document.modelContext,lifecycle=new AbortController();
 if(context?.registerTool){const empty={type:'object',properties:{},additionalProperties:false};const tools=[
  {name:'get_lab_state',description:'Read the selected demo and reports that have arrived.',inputSchema:empty,annotations:{readOnlyHint:true},execute:async()=>state()},
- {name:'select_science_scenario',description:'Navigate to a scenario; active experiments continue.',inputSchema:{type:'object',properties:{scenario:{type:'string',enum:['ngs','beads','bca','joint','catalog']}},required:['scenario'],additionalProperties:false},annotations:{readOnlyHint:false},execute:async input=>{navigate(input.scenario);return state();}},
+ {name:'select_science_scenario',description:'Navigate to a scenario; active experiments continue.',inputSchema:{type:'object',properties:{scenario:{type:'string',enum:['ngs','beads','bca','joint','experiments']}},required:['scenario'],additionalProperties:false},annotations:{readOnlyHint:false},execute:async input=>{navigate(input.scenario);return state();}},
  {name:'start_lab_experiment',description:'Start a new irreversible live author-demo instance at the selected clock ratio. Cannot reset an active run.',inputSchema:empty,annotations:{readOnlyHint:false},execute:async()=>start()},
  {name:'perform_lab_action',description:'Commit one registered operation. discard destroys unseparated material. submit ends this run. Uses the visible UI validation.',inputSchema:{type:'object',properties:{action:{type:'string',enum:Object.keys(actions).filter(x=>!['start','feedback','window_missed','dry_window_missed'].includes(x))},sample:{type:'string',enum:['A','B']},mode:{type:'string',enum:['fast','extended']},factor:{type:'number'},concentration:{type:'number'}},required:['action'],additionalProperties:false},annotations:{readOnlyHint:false},execute:async input=>{if(!input||typeof input!=='object')throw Error('需要操作对象');const {action,...p}=input;return perform(action,p);}}
  ];for(const tool of tools){try{void Promise.resolve(context.registerTool(tool,{signal:lifecycle.signal})).catch(e=>console.warn('WebMCP registration unavailable',e.message));}catch(e){console.warn('WebMCP registration unavailable',e.message);}}window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});}
 readRoute();setInterval(()=>{for(const w of Object.values(worlds))w.refresh();render();},400);
-Promise.all([fetch('./catalog.json').then(r=>{if(!r.ok)throw Error('目录加载失败');return r.json();}),fetch('./replays.json').then(r=>{if(!r.ok)throw Error('回放加载失败');return r.json();})]).then(([c,r])=>{catalog=c;replays=r;renderCatalog();renderReplayChoices();}).catch(e=>{$('error').textContent=e.message;$('error').hidden=false;});
+fetch('./replays.json').then(r=>{if(!r.ok)throw Error('回放加载失败');return r.json();}).then(r=>{replays=r;renderReplayChoices();}).catch(e=>{$('error').textContent=e.message;$('error').hidden=false;});
 
 // Leaving the workbench interrupts active browser-only experiments.
 window.addEventListener("beforeunload", event => {
