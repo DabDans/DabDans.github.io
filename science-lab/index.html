@@ -12,15 +12,15 @@
   <script>
     try { const saved = localStorage.getItem('pw-theme'); if (['light','dark'].includes(saved)) document.documentElement.dataset.theme = saved; } catch {}
   </script>
-  <link rel="stylesheet" href="./project.css?v=concise-1">
+  <link rel="stylesheet" href="./project.css?v=clear-icons-2">
   <script type="module" src="./project.mjs?v=concise-1"></script>
 </head>
 <body>
   <a class="skip" href="#main">跳到主要内容</a>
   <header class="site-header">
     <div class="nav-shell">
-      <a class="wordmark" href="./" aria-label="Protocol Worlds 首页"><img src="./mark.svg" width="28" height="28" alt=""><span>Protocol Worlds</span></a>
-      <nav aria-label="项目导航"><a href="#compare">交互演示</a><a href="#worlds">实验场景</a><a href="#design">环境设计</a><a href="#sources">数据来源</a></nav>
+      <a class="wordmark" href="./" aria-label="Protocol Worlds 首页"><img src="./mark.svg" width="34" height="34" alt=""><span>Protocol Worlds</span></a>
+      <nav aria-label="项目导航"><a href="#compare">交互演示</a><a href="#worlds">实验场景</a><a href="#design">环境设计</a></nav>
       <button id="theme-toggle" class="theme-toggle" aria-label="切换显示主题" hidden>切换主题</button>
     </div>
   </header>
@@ -63,9 +63,9 @@
       <div class="worlds-grid">
         <a class="world-feature" href="./lab/#joint"><div class="feature-copy"><h3>联合实验室 <span data-icon="arrow-right"></span></h3><p>三个流程，共享设备与时间。</p></div><div class="workbench-preview"><img src="./assets/workbench.jpg" width="1280" height="720" loading="lazy" alt="联合实验室实际界面：样本状态、实验操作与设备状态"></div></a>
         <div class="world-list">
-          <a class="world-link" href="./lab/#ngs"><span class="world-icon" data-icon="dna"></span><div><h3>NGS 连接窗口</h3><p>检测消耗时间，连接有截止窗口。</p></div><span data-icon="arrow-right"></span></a>
-          <a class="world-link" href="./lab/#beads"><span class="world-icon" data-icon="magnet"></span><div><h3>磁珠纯化</h3><p>等待分离完成，再执行不可逆操作。</p></div><span data-icon="arrow-right"></span></a>
-          <a class="world-link" href="./lab/#bca"><span class="world-icon" data-icon="pipette"></span><div><h3>BCA 批次显色</h3><p>先选稀释倍数，再等待定量结果。</p></div><span data-icon="arrow-right"></span></a>
+          <a class="world-link" href="./lab/#ngs"><span class="world-icon" data-icon="dna"></span><div><h3>NGS 连接窗口</h3><p>先检测，还是赶在截止前连接 DNA？</p></div><span class="entry-arrow" data-icon="arrow-right"></span></a>
+          <a class="world-link" href="./lab/#beads"><span class="world-icon" data-icon="magnet"></span><div><h3>磁珠纯化</h3><p>等磁珠分离，再弃上清、洗涤。</p></div><span class="entry-arrow" data-icon="arrow-right"></span></a>
+          <a class="world-link" href="./lab/#bca"><span class="world-icon" data-icon="pipette"></span><div><h3>BCA 批次显色</h3><p>选好稀释倍数，等待显色后读数。</p></div><span class="entry-arrow" data-icon="arrow-right"></span></a>
         </div>
       </div>
     </section>
@@ -73,25 +73,14 @@
     <section class="wrap design-section" id="design" aria-labelledby="design-heading">
       <h2 id="design-heading">约束如何改变决策</h2>
       <div class="principles">
-        <article><span data-icon="timer"></span><h3>时间</h3><p>思考时，实验仍在推进。</p></article>
-        <article><span data-icon="scan-line"></span><h3>信息</h3><p>检测有成本，反馈有延迟。</p></article>
-        <article><span data-icon="droplets"></span><h3>承诺</h3><p>已执行的操作不能回滚。</p></article>
-        <article><span data-icon="workflow"></span><h3>耦合</h3><p>一个流程占用另一个的机会。</p></article>
+        <article><span class="principle-icon" data-icon="timer"></span><h3>时间窗口</h3><p>思考和等待时，实验仍在推进。</p></article>
+        <article><span class="principle-icon" data-icon="scan-line"></span><h3>延迟反馈</h3><p>检测消耗时间与预算，报告延迟到达。</p></article>
+        <article><span class="principle-icon" data-icon="droplets"></span><h3>不可逆操作</h3><p>配液、弃上清后，材料不能恢复。</p></article>
+        <article><span class="principle-icon" data-icon="workflow"></span><h3>共享设备</h3><p>先做显色，就要推迟样本连接。</p></article>
       </div>
     </section>
 
-    <section class="wrap sources-section" id="sources" aria-labelledby="sources-heading">
-      <h2 id="sources-heading">从公开协议出发</h2>
-      <p class="source-summary">265 条协议元数据，24 份代码节点索引。</p>
-      <div class="source-actions"><a class="text-link" href="./lab/#catalog">浏览协议库 <span data-icon="arrow-right"></span></a><a class="text-link" href="https://library.opentrons.com/" target="_blank" rel="noreferrer">Opentrons Library ↗</a></div>
-      <details class="source-details"><summary>来源与演示说明</summary><div>
-        <p>接口另返回 316 个目录 ID，尚未完全对齐。元数据和代码索引不等于已审查完成的任务；这里只提供来源链接与节点位置，不转载完整协议程序。</p>
-        <p>来源事实与作者设置见实验台“协议与回放”。本页为可查看规则和参考回放的作者模拟，不是实际机器人实验，也不代表模型评测成绩。正式评测需独立后端、隐藏评分与信息隔离。</p>
-        <p>首屏器材图为生成的概念配图；实验台预览为实际页面截图。时间轴来自已保存的原生模拟记录。</p>
-      </div></details>
-    </section>
   </main>
-  <footer class="wrap site-footer"><a class="wordmark" href="./">Protocol Worlds</a><span>科学环境模拟演示</span></footer>
   <noscript><p class="noscript">启用 JavaScript 后可查看回放并运行实验。</p></noscript>
 </body>
 </html>
